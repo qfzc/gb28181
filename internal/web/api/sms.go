@@ -64,6 +64,7 @@ func (a SmsAPI) editMediaServer(c *gin.Context, in *sms.EditMediaServerInput) (a
 		a.uc.Conf.Media.SDPIP = out.SDPIP
 		a.uc.Conf.Media.Secret = out.Secret
 		a.uc.Conf.Media.WebHookIP = out.HookIP
+		a.uc.Conf.Media.Type = out.Type
 		if err := conf.WriteConfig(a.uc.Conf, a.uc.Conf.ConfigPath); err != nil {
 			return nil, reason.ErrServer.SetMsg(err.Error())
 		}

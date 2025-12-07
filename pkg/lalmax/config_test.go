@@ -105,7 +105,10 @@ func TestSetHttpNotifyConfig(t *testing.T) {
 	}
 
 	// 设置配置
-	err := engine.SetHttpNotifyConfig(ctx, notifyConfig)
+	err := engine.SetHttpNotifyConfig(ctx, notifyConfig, MediaConfig{
+		ListenPort:            8080,
+		MultiPortMaxIncrement: 10,
+	})
 	if err != nil {
 		t.Fatalf("SetHttpNotifyConfig 调用失败: %v", err)
 	}

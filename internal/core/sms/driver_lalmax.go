@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net"
+	"strconv"
 	"strings"
 
 	"github.com/gowvp/gb28181/pkg/lalmax"
@@ -25,6 +26,7 @@ type LalmaxDriver struct {
 // GetStreamLiveAddr implements Driver.
 func (l *LalmaxDriver) GetStreamLiveAddr(ctx context.Context, ms *MediaServer, httpPrefix string, host string, app string, stream string) StreamLiveAddr {
 	var out StreamLiveAddr
+	out.Label = "StreamSVR"
 	wsPrefix := strings.Replace(strings.Replace(httpPrefix, "https", "wss", 1), "http", "ws", 1)
 	out.WSFLV = fmt.Sprintf("%s/proxy/sms/%s.flv", wsPrefix, stream)
 	out.HTTPFLV = fmt.Sprintf("%s/proxy/sms/%s.flv", httpPrefix, stream)
@@ -101,11 +103,12 @@ func (l *LalmaxDriver) GetSnapshot(ctx context.Context, ms *MediaServer, req *Ge
 // OpenRTPServer implements Driver.
 func (l *LalmaxDriver) OpenRTPServer(ctx context.Context, ms *MediaServer, req *zlm.OpenRTPServerRequest) (*zlm.OpenRTPServerResponse, error) {
 	engine := l.withConfig(ms)
+
 	resp, err := engine.ApiCtrlStartRtpPub(ctx, lalmax.ApiCtrlStartRtpPubReq{
 		StreamName:      req.StreamID,
 		Port:            req.Port,
 		TimeoutMs:       PullTimeoutMs,
-		IsTcpFlag:       0,
+		IsTcpFlag:       int(req.TCPMode),
 		IsWaitKeyFrame:  0,
 		IsTcpActive:     false,
 		DebugDumpPacket: "",
@@ -131,6 +134,13 @@ func (l *LalmaxDriver) Protocol() string {
 // Setup implements Driver.
 func (l *LalmaxDriver) Setup(ctx context.Context, ms *MediaServer, webhookURL string) error {
 	engine := l.withConfig(ms)
+
+	ports := strings.Split(ms.RTPPortRange, "-")
+	var minPort, maxPort int
+	if len(ports) == 2 {
+		minPort, _ = strconv.Atoi(ports[0])
+		maxPort, _ = strconv.Atoi(ports[1])
+	}
 	if err := engine.SetHttpNotifyConfig(ctx, lalmax.HttpNotifyConfig{
 		Enable: true,
 		// OnPubStart:              webhookURL,
@@ -138,6 +148,9 @@ func (l *LalmaxDriver) Setup(ctx context.Context, ms *MediaServer, webhookURL st
 		OnSubStartWithoutStream: fmt.Sprintf("%s/on_stream_not_found", webhookURL),
 		OnStreamChanged:         fmt.Sprintf("%s/on_stream_changed", webhookURL),
 		ClientSize:              50,
+	}, lalmax.MediaConfig{
+		ListenPort:            minPort,
+		MultiPortMaxIncrement: maxPort - minPort,
 	}); err != nil {
 		return err
 	}

@@ -18,6 +18,7 @@ type ZLMDriver struct {
 // GetStreamLiveAddr implements Driver.
 func (d *ZLMDriver) GetStreamLiveAddr(ctx context.Context, ms *MediaServer, httpPrefix, host, app, stream string) StreamLiveAddr {
 	var out StreamLiveAddr
+	out.Label = "ZLM"
 	wsPrefix := strings.Replace(strings.Replace(httpPrefix, "https", "wss", 1), "http", "ws", 1)
 	out.WSFLV = fmt.Sprintf("%s/proxy/sms/%s.live.flv", wsPrefix, stream)
 	out.HTTPFLV = fmt.Sprintf("%s/proxy/sms/%s.live.flv", httpPrefix, stream)

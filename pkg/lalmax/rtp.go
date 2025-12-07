@@ -2,7 +2,7 @@ package lalmax
 
 import "context"
 
-const ctrlStartRtpPub = "/api/ctrl/startRtpPub"
+const ctrlStartRtpPub = "/api/ctrl/start_rtp_pub"
 
 type ApiCtrlStartRtpPubReq struct {
 	StreamName      string `json:"stream_name"`

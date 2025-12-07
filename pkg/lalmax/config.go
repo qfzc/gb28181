@@ -404,10 +404,14 @@ type SetServerConfigResponse struct {
 //	if err != nil {
 //	    log.Fatal(err)
 //	}
-func (e *Engine) SetHttpNotifyConfig(ctx context.Context, config HttpNotifyConfig) error {
+func (e *Engine) SetHttpNotifyConfig(ctx context.Context, config HttpNotifyConfig, gb28181 MediaConfig) error {
 	// 使用合并模式，只更新 http_notify 配置
 	data := map[string]any{
 		"http_notify": config,
+		"gb28181": map[string]any{
+			"enable":       false,
+			"media_config": gb28181,
+		},
 	}
 	return e.setServerConfig(ctx, data, true)
 }
