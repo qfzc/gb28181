@@ -54,7 +54,8 @@ func registerZLMWebhookAPI(r gin.IRouter, api WebHookAPI, handler ...gin.Handler
 // onServerKeepalive 服务器定时上报时间，上报间隔可配置，默认 10s 上报一次
 // https://docs.zlmediakit.com/zh/guide/media_server/web_hook_api.html#_16%E3%80%81on-server-keepalive
 func (w WebHookAPI) onServerKeepalive(_ *gin.Context, in *onServerKeepaliveInput) (DefaultOutput, error) {
-	w.smsCore.Keepalive(in.MediaServerID)
+	// TODO: 仅支持默认
+	w.smsCore.Keepalive(sms.DefaultMediaServerID)
 	return newDefaultOutputOK(), nil
 }
 

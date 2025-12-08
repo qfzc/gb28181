@@ -104,7 +104,7 @@ func (d *ZLMDriver) Setup(ctx context.Context, ms *MediaServer, webhookURL strin
 		HookOnShellLogin:               zlm.NewString(""),
 		HookOnStreamChanged:            zlm.NewString(fmt.Sprintf("%s/on_stream_changed", webhookURL)),
 		HookOnServerKeepalive:          zlm.NewString(fmt.Sprintf("%s/on_server_keepalive", webhookURL)),
-		HookTimeoutSec:                 zlm.NewString("20"),
+		HookTimeoutSec:                 zlm.NewString("10"),
 		HookAliveInterval:              zlm.NewString(fmt.Sprint(ms.HookAliveInterval)),
 		ProtocolContinuePushMs:         zlm.NewString("3000"),
 		RtpProxyPortRange:              &ms.RTPPortRange,

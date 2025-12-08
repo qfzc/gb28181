@@ -263,6 +263,8 @@ type HttpApiConfig struct {
 
 type HttpNotifyConfig struct {
 	Enable                  bool   `json:"enable"`
+	KeepaliveIntervalSec    int    `json:"keepalive_interval_sec"`
+	OnKeepalive             string `json:"on_keepalive"`
 	UpdateIntervalSec       int    `json:"update_interval_sec"`
 	OnServerStart           string `json:"on_server_start"`
 	OnUpdate                string `json:"on_update"`
@@ -408,9 +410,13 @@ func (e *Engine) SetHttpNotifyConfig(ctx context.Context, config HttpNotifyConfi
 	// 使用合并模式，只更新 http_notify 配置
 	data := map[string]any{
 		"http_notify": config,
+		"rtsp": map[string]any{
+			"pub_not_sub_auto_close_sec": 30,
+		},
 		"gb28181": map[string]any{
-			"enable":       false,
-			"media_config": gb28181,
+			"enable":                     false,
+			"pub_not_sub_auto_close_sec": 30,
+			"media_config":               gb28181,
 		},
 	}
 	return e.setServerConfig(ctx, data, true)

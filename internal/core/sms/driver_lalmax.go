@@ -142,7 +142,9 @@ func (l *LalmaxDriver) Setup(ctx context.Context, ms *MediaServer, webhookURL st
 		maxPort, _ = strconv.Atoi(ports[1])
 	}
 	if err := engine.SetHttpNotifyConfig(ctx, lalmax.HttpNotifyConfig{
-		Enable: true,
+		Enable:               true,
+		KeepaliveIntervalSec: ms.HookAliveInterval,
+		OnKeepalive:          fmt.Sprintf("%s/on_server_keepalive", webhookURL),
 		// OnPubStart:              webhookURL,
 		// OnPubStop:               webhookURL,
 		OnSubStartWithoutStream: fmt.Sprintf("%s/on_stream_not_found", webhookURL),

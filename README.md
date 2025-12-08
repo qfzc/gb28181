@@ -41,7 +41,7 @@ go wvp 是 Go 语言实现的开源 GB28181 解决方案，基于 GB28181-2022 �
 
 + @夏楚 [ZLMediaKit](https://github.com/ZLMediaKit/ZLMediaKit)
 
-+ **lalmax-pro 有 golang 流媒体的需求请联系微信 [golangxx](https://github.com/ixugo)**
++ **lalmax-pro 有 golang 流媒体的需求请联系微信 [joestar2006](https://github.com/joestarzxh)**
   - 对环境没有要求，不需要安装任何静态库，支持跨平台编译
   - 支持特色功能定制
   - 支持 G711(G711A/G711U) 转 AAC
